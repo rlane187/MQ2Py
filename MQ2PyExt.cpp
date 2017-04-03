@@ -132,6 +132,8 @@ void Init_Module_PyMQ2_DataWrapper();
 void Init_Module_PyMQ2_Plugin();
 void Init_Module_PyMQ2_Command();
 void Init_Module_PyMQ2_Enum();
+void Init_Module_PyMQ2_Race();
+void Init_Module_PyMQ2_Heading();
 void Init_Module_PyMQ2_Guild();
 void Init_Module_PyMQ2_Character();
 void Init_Module_PyMQ2_Spawn();
@@ -162,6 +164,8 @@ void Init_Module_PyMQ2()
 	def("DebugSpew", &PyMQ2_DebugSpew);
 
 	Init_Module_PyMQ2_DataWrapper();
+	Init_Module_PyMQ2_Race();
+	Init_Module_PyMQ2_Heading();
 	Init_Module_PyMQ2_Spell();
 	Init_Module_PyMQ2_Item();
 	Init_Module_PyMQ2_Spawn();

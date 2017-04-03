@@ -1,5 +1,8 @@
 .svn
 MQ2Py.vcproj
+MQ2Py.vcxproj
+MQ2Py.vcxproj.filters
 MQ2Py.vcxproj.user
 Release
 Debug
+Intermediate

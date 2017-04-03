@@ -10,6 +10,8 @@
 #include "MQ2Py.h"
 #include "MQ2PyExt.h"
 #include "MQ2PyExt_Spawn.h"
+#include "MQ2PyExt_Race.h"
+#include "MQ2PyExt_Heading.h"
 
 #include <unordered_map>
 
@@ -334,7 +336,7 @@ std::string PythonSpawn::CleanName()
 	return buffer;
 }
 
-std::string PythonSpawn::DisplayedName()
+std::string PythonSpawn::DisplayName()
 {
 	AssertIsValid();
 	return pSpawn->DisplayedName;
@@ -366,22 +368,54 @@ int PythonSpawn::ID()
 	return pSpawn->SpawnID;
 }
 
-int PythonSpawn::CurrentHP()
+int PythonSpawn::CurrentHPs()
 {
 	AssertIsValid();
 	return pSpawn->HPCurrent;
 }
 
-int PythonSpawn::MaxHP()
+int PythonSpawn::MaxHPs()
 {
 	AssertIsValid();
 	return pSpawn->HPMax;
 }
 
-float PythonSpawn::PctHP()
+float PythonSpawn::PctHPs()
 {
 	AssertIsValid();
-	return (float)(pSpawn->HPCurrent * 100) / (float)pSpawn->HPMax;
+	return pSpawn->HPMax != 0 ? (float)(pSpawn->HPCurrent * 100) / (float)pSpawn->HPMax : 0;
+}
+
+int PythonSpawn::AARank()
+{
+	AssertIsValid();
+	return pSpawn->AARank != 0xFF ? pSpawn->AARank : 0;
+}
+
+float PythonSpawn::Speed()
+{
+	AssertIsValid();
+	return FindSpeed(pSpawn);
+}
+
+PythonHeading PythonSpawn::Heading()
+{
+	AssertIsValid();
+	return PythonHeading(pSpawn->Heading*0.703125f);
+}
+
+std::string PythonSpawn::Gender()
+{
+	AssertIsValid();
+	char buffer[MAX_STRING];
+	strcpy_s(buffer, MAX_STRING, szGender[pSpawn->mActorClient.Gender]);
+	return buffer;
+}
+
+PythonRace PythonSpawn::Race()
+{
+	AssertIsValid();
+	return PythonRace(pSpawn->mActorClient.Race);
 }
 
 eSpawnType PythonSpawn::Type()
@@ -415,10 +449,34 @@ boost::python::tuple PythonSpawn::Position3D()
 	return boost::python::make_tuple(pSpawn->Y, pSpawn->X, pSpawn->Z);
 }
 
+float PythonSpawn::E()
+{
+	AssertIsValid();
+	return -pSpawn->X;
+}
+
+float PythonSpawn::W()
+{
+	AssertIsValid();
+	return pSpawn->X;
+}
+
 float PythonSpawn::X()
 {
 	AssertIsValid();
 	return pSpawn->X;
+}
+
+float PythonSpawn::S()
+{
+	AssertIsValid();
+	return -pSpawn->Y;
+}
+
+float PythonSpawn::N()
+{
+	AssertIsValid();
+	return pSpawn->Y;
 }
 
 float PythonSpawn::Y()
@@ -427,10 +485,28 @@ float PythonSpawn::Y()
 	return pSpawn->Y;
 }
 
+float PythonSpawn::D()
+{
+	AssertIsValid();
+	return -pSpawn->Z;
+}
+
+float PythonSpawn::U()
+{
+	AssertIsValid();
+	return pSpawn->Z;
+}
+
 float PythonSpawn::Z()
 {
 	AssertIsValid();
 	return pSpawn->Z;
+}
+
+float PythonSpawn::FloorZ()
+{
+	AssertIsValid();
+	return pSpawn->FloorHeight;
 }
 
 //----------------------------------------------------------------------------
@@ -599,23 +675,34 @@ void Init_Module_PyMQ2_Spawn()
 		.add_property("Name", &PythonSpawn::Name)
 		.add_property("Surname", &PythonSpawn::Surname)
 		.add_property("CleanName", &PythonSpawn::CleanName)
-		.add_property("DisplayedName", &PythonSpawn::DisplayedName)
+		.add_property("DisplayedName", &PythonSpawn::DisplayName)
 		.add_property("Title", &PythonSpawn::Title)
 		.add_property("Suffix", &PythonSpawn::Suffix)
 
 		.add_property("Level", &PythonSpawn::Level)
 		.add_property("ID", &PythonSpawn::ID)
-		.add_property("CurrentHP", &PythonSpawn::CurrentHP)
-		.add_property("MaxHP", &PythonSpawn::MaxHP)
-		.add_property("PctHP", &PythonSpawn::PctHP)
+		.add_property("CurrentHPs", &PythonSpawn::CurrentHPs)
+		.add_property("MaxHPs", &PythonSpawn::MaxHPs)
+		.add_property("PctHPs", &PythonSpawn::PctHPs)
+		.add_property("AARank", &PythonSpawn::AARank)
+		.add_property("Speed", &PythonSpawn::Speed)
+		.add_property("Gender", &PythonSpawn::Gender)
+		.add_property("Race", &PythonSpawn::Race)
 		.add_property("Type", &PythonSpawn::Type)
 		.add_property("Class", &PythonSpawn::Class)
 
 		.add_property("Position", &PythonSpawn::Position)
 		.add_property("Position3D", &PythonSpawn::Position3D)
+		.add_property("E", &PythonSpawn::E)
+		.add_property("W", &PythonSpawn::W)
 		.add_property("X", &PythonSpawn::X)
+		.add_property("S", &PythonSpawn::S)
+		.add_property("N", &PythonSpawn::N)
 		.add_property("Y", &PythonSpawn::Y)
+		.add_property("U", &PythonSpawn::U)
+		.add_property("U", &PythonSpawn::U)
 		.add_property("Z", &PythonSpawn::Z)
+		.add_property("FloorZ", &PythonSpawn::FloorZ)
 
 		.add_property("HasPet", &PythonSpawn::HasPet)
 		.add_property("PetID", &PythonSpawn::PetID)

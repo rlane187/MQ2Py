@@ -8,6 +8,9 @@
 
 #pragma once
 
+class PythonRace;
+class PythonHeading;
+
 class PythonSpawn
 {
 public:
@@ -33,16 +36,21 @@ public:
 	std::string Name();
 	std::string Surname();
 	std::string CleanName();
-	std::string DisplayedName();
+	std::string DisplayName();
 	std::string Title();
 	std::string Suffix();
 
 	// General properties
 	int Level();
 	int ID();
-	int CurrentHP();
-	int MaxHP();
-	float PctHP();
+	int CurrentHPs();
+	int MaxHPs();
+	float PctHPs();
+	int AARank();
+	float Speed();
+	PythonHeading Heading();
+	std::string Gender();
+	PythonRace Race();
 	eSpawnType Type();
 
 	enum PlayerClass Class();
@@ -50,9 +58,16 @@ public:
 	// Location properties
 	boost::python::tuple Position();
 	boost::python::tuple Position3D();
+	float E();
+	float W();
 	float X();
+	float S();
+	float N();
 	float Y();
+	float D();
+	float U();
 	float Z();
+	float FloorZ();
 
 	// Pet
 	bool HasPet();
